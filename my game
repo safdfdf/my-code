@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <SFML/Graphics.hpp>
+
+using namespace std;
+using namespace sf;
+
+// Constants
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
+const int MENU_WIDTH = 400;
+const int MENU_HEIGHT = 200;
+const int CIRCLE_RADIUS = 50;
+const string EASY_MODE = "Easy Mode";
+const string HARD_MODE = "Hard Mode";
+const string GAME_OVER = "Game Over";
+const string DEMON_FACE = "demon.png"; // Path to the image file
+const Color BACKGROUND_COLOR = Color::White;
+const Color TEXT_COLOR = Color::Black;
+const Color CIRCLE_COLOR = Color::Red;
+const Font FONT = Font(); // Load a font file here
+const int EASY_SPEED = 1000; // Milliseconds between circle spawns
+const int HARD_SPEED = 500; // Milliseconds between circle spawns
+const int SPEED_INCREASE = 15; // Percentage of speed increase every 5 seconds
+const int CIRCLE_LIFETIME = 3000; // Milliseconds before circle disappears
+
+// Struct to store circle data
+struct Circle {
+    CircleShape shape; // The circle shape object
+    Clock clock; // The clock to measure the lifetime of the circle
+};
+
+// Global variables
+RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "C++ Game"); // The window object
+vector<Circle> circles; // The vector to store the circles
+Clock gameClock; // The clock to measure the game time
+int score = 0; // The score of the player
+int speed = EASY_SPEED; // The speed of circle spawning
+bool gameOver = false; // The flag to indicate game over
+bool gameStarted = false; // The flag to indicate game started
+
+// Function prototypes
+void drawMenu(); // Draw the menu screen
+void drawGame(); // Draw the game screen
+void drawGameOver(); // Draw the game over screen
+void updateGame(); // Update the game logic
+void spawnCircle(); // Spawn a new circle
+void removeCircle(int index); // Remove a circle by index
+void handleClick(int x, int y); // Handle mouse click event
+
+// Main function
+int main() {
+    srand(time(NULL)); // Initialize random seed
+
+    while (window.isOpen()) { // Main loop
+        Event event; // Event object
+
+        while (window.pollEvent(event)) { // Event loop
+            if (event.type == Event::Closed) { // Window closed event
+                window.close(); // Close the window
+            }
+
+            if (event.type == Event::MouseButtonPressed) { // Mouse button pressed event
+                handleClick(event.mouseButton.x, event.mouseButton.y); // Handle mouse click event
+            }
+        }
